@@ -1289,6 +1289,10 @@ func (c *Client) PerformRequest(ctx context.Context, opt PerformRequestOptions) 
 		if err != nil {
 			n++
 			wait, ok, rerr := retrier.Retry(ctx, n, (*http.Request)(req), res, err)
+			if rerr == context.Canceled || rerr == context.DeadlineExceeded {
+				// Proceed, but don't mark the node as dead
+				return nil, rerr
+			}
 			if rerr != nil {
 				c.errorf("elastic: %s is dead", conn.URL())
 				conn.MarkAsDead()

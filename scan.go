@@ -276,6 +276,9 @@ func (s *ScanService) DoC(ctx context.Context) (*ScanCursor, error) {
 	if s.routing != "" {
 		params.Set("routing", s.routing)
 	}
+	if s.preference != "" {
+		params.Set("preference", s.preference)
+	}
 
 	// Get response
 	var body interface{}
